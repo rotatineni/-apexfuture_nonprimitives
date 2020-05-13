@@ -9,3 +9,9 @@ There will be times when your data is not a primitive or collection of primitive
 
 Refer to file "asyncapex" in this project on how to overcome this limitation by serializing your data before passing to @future method and then deserialize inside the @future method. 
 
+General Best Practices for @future methods:
+Since every future method invocation adds one request to the asynchronous queue, avoid design patterns that add large numbers of future requests over a short period of time. If your design has the potential to add 2000 or more requests at a time, requests could get delayed due to flow control. Here are some best practices you want to keep in mind:
+-- Ensure that future methods execute as fast as possible.
+-- If using Web service callouts, try to bundle all callouts together from the same future method, rather than using a separate future method for each callout.
+-- Conduct thorough testing at scale. Test that a trigger enqueuing the @future calls is able to handle a trigger collection of 200 records. This helps determine if delays may occur given the design at current and future volumes.
+-- Consider using Batch Apex instead of future methods to process large number of records asynchronously. This is more efficient than creating a future request for each record.
